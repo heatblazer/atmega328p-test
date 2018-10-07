@@ -17,7 +17,7 @@ int main(void)
 #endif
 
 #if 1
-    atm->Test_Screen1(atm);
+    atm->Test_Screen1(atm); // write some bytes to some coords 
 #endif
 #if 0
     for(;;)

@@ -17,8 +17,9 @@ static void _uart_recv(char* ret)
 
 static void _uart_send(unsigned char data)
 {
-     while ( !( UCSR0A & (1<<UDRE0)) )
+     while ( !( UCSR0A & (1<<UDRE0/* 5 */)) )
      {
+	 // check the status reg for 5 bit
      }
     UDR0 = data;
 }
