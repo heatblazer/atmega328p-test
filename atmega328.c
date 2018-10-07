@@ -11,7 +11,7 @@ struct internal
 
 static void _uart_recv(char* ret)
 {
-    while ( !(UCSR0A & (1<<RXC0)) ) {}
+    while ( !(UCSR0A & (1<<RXC0 /* 7 */)) ) {/* check the status register for reading */}
     *ret = UDR0;
 }
 
