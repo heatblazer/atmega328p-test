@@ -72,6 +72,12 @@ static void _put_pixl(struct Atmega328p* _this, unsigned long x, unsigned long y
     _this->_private->screen[x * ATMEGA328P_SCREEN_H + y] = pix;
 }
 
+
+static void dummy(void)
+{
+    // todo 
+}
+
 ////////////////////////////////////////////////////////////////////////
 static void   _tst_scrn(struct Atmega328p* _this)
 {
@@ -85,6 +91,7 @@ static void   _tst_scrn(struct Atmega328p* _this)
 	}
     }
 }
+
 
 ////////////////////////////////////////////////////////////////////////
 static struct internal s_internal;
@@ -102,7 +109,11 @@ struct Atmega328p* CreateDevice(void)
     s_Instance.UART_Send = &_uart_send;
     s_Instance.Uart_Recv = &_uart_recv;
     s_Instance.Put_pixel = &_put_pixl;
+    
+    s_Instance.Init_ISR = &dummy;
+    s_Instance.Init_timers = &dummy; 
     // some setup
+    
     
     _clr_scn(&s_Instance);
     s_Instance.Test_Screen1 = &_tst_scrn;

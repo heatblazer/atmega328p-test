@@ -27,6 +27,8 @@ struct Atmega328p
     void (*Clear_screen)(struct Atmega328p*);
     void (*Put_pixel)(struct Atmega328p*, unsigned long, unsigned long, unsigned char);
     void (*Test_Screen1)(struct Atmega328p*);
+    void (*Init_timers)(void); // todo
+    void (*Init_ISR)(void); // todo
 };
 
 
