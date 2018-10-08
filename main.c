@@ -1,10 +1,14 @@
-#include "atmega328p.h"
-
-#define F_CPU 1000000
-#define BAUD 9600
-#define UBRR ((F_CPU)/8) / BAUD-1
+#include "arch/atmega328p.h"
 
 
+int main(void)
+{
+    init_all();
+    loop();
+    
+}
+
+/*
 int main(void)
 {
     struct Atmega328p* atm = CreateDevice(); 
@@ -32,3 +36,4 @@ int main(void)
 #endif
     return 0;
 }
+*/

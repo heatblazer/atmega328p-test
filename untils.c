@@ -1,8 +1,10 @@
-#include "untils.h"
-#include <avr/io.h>
+//#include "untils.h"
+//#include <avr/io.h>
 
-void Delay()
+/*
+void delay(unsigned int msec)
 {
+    (void)msec;
     unsigned long i;
     for(i=0; i < 100000UL; i++)
     {
@@ -10,3 +12,5 @@ void Delay()
 	(void)j;
     }
 }
+*/
+
