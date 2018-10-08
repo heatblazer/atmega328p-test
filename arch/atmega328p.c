@@ -1,6 +1,12 @@
 #include "atmega328p.h"
 #include "../untils.h"
 
+#include <avr/io.h> 
+#include <avr/interrupt.h> 
+
+static unsigned long test = 0;
+
+
 
 // global screen buffer
 static unsigned char screen[ATMEGA328P_SCREEN_H * ATMEGA328P_SCREEN_W] = {0};
@@ -39,10 +45,8 @@ void uart_send(unsigned char data)
 
 void blink(void)
 {
-    PORTB = 1 << 5;
-    delay(0);
-    PORTB = 0 << 5;
-    delay(0);	    
+    PORTB |= 1 << 5;
+//    delay(0);
 }
 
 void init_device(void)
@@ -58,7 +62,7 @@ void setup_uart(unsigned int ubrr)
     UBRR0L = ubrr;
     
     //MPCM0: - multiproc communication mode, not used 
-    UCSR0B = (1<<RXEN0)|(1<<TXEN0);
+    UCSR0B = (1<<RXEN0)|(1<<TXEN0)|(1 << RXC0);
 
     UCSR0A = (1<<UDRE0)|(1<<U2X0); //ux20 1 for asynchronoys ops, write it 0 to synchro.
 
@@ -68,8 +72,27 @@ void setup_uart(unsigned int ubrr)
     DDRD |= (1 << 7);
     return A_OK;    
 }
+// flush, kind of getchar() getchar()
+void uart_flush(void)
+{
+    unsigned char unused = 0;
+    while (!(UCSR0A & (1 << RXC0))) ; 
+    unused = UDR0;
+}
 
+void setup_isr(void)
+{
+    // not yet, just hit
+//    EICRA |= (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3); 
+//    PCICR |= (1 << 0) | (1 << 1) | (1 << 2); 
 
+    cli();
+    // port b5 is PCINT5, when it blinks, maybe produce int
+    PCICR |= (1 << 0);    // set INT0 to trigger on ANY logic change
+    PCMSK0 |= (1 << PCINT5);     // Turns on INT0
+    sei();
+    
+}
 
 void delay(unsigned int msec)
 {
@@ -83,6 +106,19 @@ void delay(unsigned int msec)
 }
 
 ////////////////////////////////////////////////////////////////////////
+
+// 0x0028 USART_TXC USART Tx Complete
+
+// notes
+// ISR
+//Name:
+//EICRA
+//Offset: 0x69
+//Reset:
+//0x00
+
+
+
 static void   test_prog1(void)
 {
     for(;;)
@@ -96,13 +132,25 @@ static void   test_prog1(void)
     }
 }
 
+
+
 void init_all(void)
 {
     init_device();
     setup_uart(UBRR);
+    setup_isr();
 }
 
 void loop(void)
 {
-    test_prog1();
+//    test_prog1();
+    for(;;)
+	blink();
+}
+
+
+ISR(PCINT5_vect)
+{
+    PORTB |= 1 << 5;
+    delay(0);
 }

@@ -1,11 +1,9 @@
 #include "arch/atmega328p.h"
 
-
 int main(void)
 {
     init_all();
     loop();
-    
 }
 
 /*

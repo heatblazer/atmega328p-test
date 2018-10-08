@@ -1,7 +1,5 @@
 #pragma once
 #include "defs.h"
-#include <avr/io.h>
-
 
 typedef enum _AError
 {
