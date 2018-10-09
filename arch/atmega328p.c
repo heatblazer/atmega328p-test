@@ -45,8 +45,8 @@ void uart_send(unsigned char data)
 
 void blink(void)
 {
-    PORTB |= 1 << 5;
-//    delay(0);
+    delay(0);
+    PORTB|= 1 << 5;
 }
 
 void init_device(void)
@@ -86,10 +86,11 @@ void setup_isr(void)
 //    EICRA |= (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3); 
 //    PCICR |= (1 << 0) | (1 << 1) | (1 << 2); 
 
-    cli();
+    
+    PCMSK0 |= (1 << PCINT0);     // mask the status
     // port b5 is PCINT5, when it blinks, maybe produce int
-    PCICR |= (1 << 0);    // set INT0 to trigger on ANY logic change
-    PCMSK0 |= (1 << PCINT5);     // Turns on INT0
+    PCICR |= (1 << PCIE0);    
+    PCIFR |= (1 << PCIF0);
     sei();
     
 }
@@ -149,8 +150,19 @@ void loop(void)
 }
 
 
-ISR(PCINT5_vect)
+ISR(PCINT0_vect)
 {
+    // working here!!!
     PORTB |= 1 << 5;
-    delay(0);
+    reti();
+}
+
+ISR(PCINT1_vect)
+{
+    reti();
+}
+
+ISR(PCINT2_vect)
+{
+    reti();
 }
