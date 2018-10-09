@@ -1,16 +1,7 @@
-//#include "untils.h"
-//#include <avr/io.h>
+#include "untils.h"
 
-/*
-void delay(unsigned int msec)
+unsigned char reverse_byte(unsigned char val)
 {
-    (void)msec;
-    unsigned long i;
-    for(i=0; i < 100000UL; i++)
-    {
-	volatile long j = i;
-	(void)j;
-    }
+    return ((val << 6) & 192) |((val >> 6) & 3) |
+            ((val << 4) & 48) | ((val >> 4) & 12);
 }
-*/
-

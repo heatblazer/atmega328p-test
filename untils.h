@@ -1,4 +1,7 @@
 #pragma once
+
+extern unsigned char reverse_byte(unsigned char);
+
 extern void delay(unsigned int);
 
 extern void uart_send(unsigned char);
