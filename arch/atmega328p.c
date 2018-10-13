@@ -4,6 +4,10 @@
 #include <avr/io.h> 
 #include <avr/interrupt.h> 
 
+#include "../ringbuffer.h"
+
+T_RING_BUFFER(unsigned char, rb, 64);
+
 static unsigned long test = 0;
 
 
@@ -134,19 +138,27 @@ static void   test_prog1(void)
 }
 
 
+static void test_prog2(void)
+{
+    
+    
+}
+
 
 void init_all(void)
 {
     init_device();
     setup_uart(UBRR);
     setup_isr();
+    rb_init();
 }
 
 void loop(void)
 {
 //    test_prog1();
     for(;;)
-	blink();
+    {
+    }
 }
 
 
@@ -157,12 +169,3 @@ ISR(PCINT0_vect)
     reti();
 }
 
-ISR(PCINT1_vect)
-{
-    reti();
-}
-
-ISR(PCINT2_vect)
-{
-    reti();
-}
