@@ -56,6 +56,7 @@ void blink(void)
 void init_device(void)
 {
     DDRB  |= 1 << 5; //set PB5 for output	
+    PORTB |= 0 << 5;
 }
 
 // setup uart 
@@ -86,17 +87,17 @@ void uart_flush(void)
 
 void setup_isr(void)
 {
+    cli();
     // not yet, just hit
 //    EICRA |= (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3); 
 //    PCICR |= (1 << 0) | (1 << 1) | (1 << 2); 
-
-    
-    PCMSK0 |= (1 << PCINT0);     // mask the status
+    //PCMSK0 |= (1 << PCINT0);     // mask the status
+   // PCMSK2 |= (1 << PCINT17); //(1 << PCINT16) | (1 << PCINT17); // PCINT16
     // port b5 is PCINT5, when it blinks, maybe produce int
-    PCICR |= (1 << PCIE0);    
-    PCIFR |= (1 << PCIF0);
+    //PCICR |= (1 << PCIE0);
+   // PCIFR |= (1 << PCIF0) | (1 << PCIF1) | (1 << PCIF2); 
+     UCSR0B |= (1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0); 
     sei();
-    
 }
 
 void delay(unsigned int msec)
@@ -150,22 +151,24 @@ void init_all(void)
     init_device();
     setup_uart(UBRR);
     setup_isr();
-    rb_init();
+    
 }
 
 void loop(void)
 {
-//    test_prog1();
-    for(;;)
-    {
-    }
+    test_prog1();
 }
 
-
-ISR(PCINT0_vect)
+ISR(USART_RX_vect)
 {
+    cli();
     // working here!!!
     PORTB |= 1 << 5;
+    sei();
     reti();
 }
 
+
+ISR(USART_TX_vect)
+{
+}
