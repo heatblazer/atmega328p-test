@@ -36,7 +36,7 @@ static void do_term (struct uart *u0)
 		r = uart_read (u0, tmp, sizeof (tmp), 0, TU_10MS);
 		if (r < 0)
 			break;
-		if (r)
+		if (r >=0)
 			printf ("%.*s", r, tmp);
 
 		r = read (0, tmp, 64);

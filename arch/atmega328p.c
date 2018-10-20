@@ -134,6 +134,7 @@ static void   test_prog1(void)
 	{
 	    PORTD ^= (1<< 7);
 	    uart_send(screen[i]);
+	    uart_flush();
 	}
     }
 }
@@ -159,13 +160,10 @@ void loop(void)
     test_prog1();
 }
 
+
 ISR(USART_RX_vect)
 {
-    cli();
-    // working here!!!
-    PORTB |= 1 << 5;
-    sei();
-    reti();
+    PORTB ^= 1 << 5;
 }
 
 
