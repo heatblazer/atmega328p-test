@@ -53,29 +53,26 @@ void blink(void)
     PORTB|= 1 << 5;
 }
 
-void init_device(void)
+void init_device(void) //init_gpio
 {
-    DDRB  |= 1 << 5; //set PB5 for output	
     PORTB |= 0 << 5;
+    DDRB  |= 1 << 5; //set PB5 for output	
 }
 
 // setup uart 
 void setup_uart(unsigned int ubrr)
 {
+    UCSR0B = (0<<RXEN0)|(0<<TXEN0); 
+
     // set hiher and lower 
     UBRR0H = ubrr >> 8;
     UBRR0L = ubrr;
     
-    //MPCM0: - multiproc communication mode, not used 
-    UCSR0B = (1<<RXEN0)|(1<<TXEN0)|(1 << RXC0);
-
-    UCSR0A = (1<<UDRE0)|(1<<U2X0); //ux20 1 for asynchronoys ops, write it 0 to synchro.
-
+    UCSR0A = (1<<U2X0) | (0 << MPCM0) ; //ux20 1 for asynchronoys ops, write it 0 to synchro. 
     UCSR0C =  (1 << UCSZ01) | (1 << UCSZ00);    // Set frame: 8data, 1 stop
-    
-    // data direction to D port
+    UCSR0B = (1<<RXEN0)|(1<<TXEN0)|(1 << RXCIE0);    
+    // make outpt 
     DDRD |= (1 << 7);
-    return A_OK;    
 }
 // flush, kind of getchar() getchar()
 void uart_flush(void)
@@ -87,8 +84,7 @@ void uart_flush(void)
 
 void setup_isr(void)
 {
-    cli();
-    // not yet, just hit
+    // not yet, just hint
 //    EICRA |= (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3); 
 //    PCICR |= (1 << 0) | (1 << 1) | (1 << 2); 
     //PCMSK0 |= (1 << PCINT0);     // mask the status
@@ -96,8 +92,7 @@ void setup_isr(void)
     // port b5 is PCINT5, when it blinks, maybe produce int
     //PCICR |= (1 << PCIE0);
    // PCIFR |= (1 << PCIF0) | (1 << PCIF1) | (1 << PCIF2); 
-     UCSR0B |= (1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0); 
-    sei();
+//     UCSR0B |= (1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0); 
 }
 
 void delay(unsigned int msec)
@@ -143,15 +138,14 @@ static void   test_prog1(void)
 static void test_prog2(void)
 {
     
-    
 }
-
 
 void init_all(void)
 {
     init_device();
     setup_uart(UBRR);
     setup_isr();
+    sei();
     
 }
 
@@ -164,6 +158,7 @@ void loop(void)
 ISR(USART_RX_vect)
 {
     PORTB ^= 1 << 5;
+    rb_put_data(UDR0);
 }
 
 

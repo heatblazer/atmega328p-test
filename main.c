@@ -3,7 +3,10 @@
 int main(void)
 {
     init_all();
-    loop();
+    
+    for(;;)
+    {
+    }
 }
 
 /*
