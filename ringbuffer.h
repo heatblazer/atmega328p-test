@@ -9,11 +9,13 @@
     }						 	\
     static void N##_get_data(T* ret)		 	\
     {						 	\
-	if (N##_rhead < N##_whead)		 	\
-	    *ret = N##arr[N##_rhead++ & S-1];	 	\
+	if (N##_rhead <= N##_whead)		 	\
+	    *ret = N##arr[N##_rhead++ & (S) -1];	\
+	else						\
+	     *ret = N##arr[N##_rhead & (S) - 1];	\
     }						 	\
     static void N##_put_data(T data)		 	\
     {						 	\
 	if (N##_rhead < N##_whead)		 	\
             N##arr[N##_whead++ & S-1] = data;	 	\
-    }						
+    }							\						
