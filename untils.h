@@ -15,3 +15,5 @@ extern void setup_uart(unsigned int);
 extern void uart_flush(void);
 
 extern void setup_isr(void);
+
+extern void setup_timers(void);
