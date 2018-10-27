@@ -93,6 +93,10 @@ void setup_isr(void)
     //PCICR |= (1 << PCIE0);
    // PCIFR |= (1 << PCIF0) | (1 << PCIF1) | (1 << PCIF2); 
 //     UCSR0B |= (1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0); 
+    
+    TCCR1B |= (1<<WGM12)|(1<<CS12); 
+    OCR1A = 31249;
+    TIMSK1 |= (1<<OCIE1A);
 }
 
 void delay(unsigned int msec)
@@ -145,8 +149,7 @@ void init_all(void)
     init_device();
     setup_uart(UBRR);
     setup_isr();
-    sei();
-    
+    sei();    
 }
 
 void loop(void)
@@ -154,7 +157,7 @@ void loop(void)
     test_prog1();
 }
 
-
+/*********************************************************************/
 ISR(USART_RX_vect)
 {
     PORTB ^= 1 << 5;
@@ -164,4 +167,9 @@ ISR(USART_RX_vect)
 
 ISR(USART_TX_vect)
 {
+}
+
+ISR(TIMER1_COMPA_vect)
+{
+    PORTB ^= (1 << 5); 
 }
