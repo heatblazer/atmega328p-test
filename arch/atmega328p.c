@@ -82,6 +82,15 @@ void uart_flush(void)
     unused = UDR0;
 }
 
+
+static void set_timer(unsigned short t)
+{
+    TCCR1B |= (1<<WGM12)|(1<<CS12); 
+    OCR1A = t;
+    TIMSK1 |= (1<<OCIE1A);
+
+}
+
 void setup_isr(void)
 {
     // not yet, just hint
@@ -93,10 +102,7 @@ void setup_isr(void)
     //PCICR |= (1 << PCIE0);
    // PCIFR |= (1 << PCIF0) | (1 << PCIF1) | (1 << PCIF2); 
 //     UCSR0B |= (1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0); 
-    
-    TCCR1B |= (1<<WGM12)|(1<<CS12); 
-    OCR1A = 31249;
-    TIMSK1 |= (1<<OCIE1A);
+    set_timer(9600);
 }
 
 void delay(unsigned int msec)
